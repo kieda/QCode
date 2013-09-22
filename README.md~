@@ -19,6 +19,8 @@ Currently:
 
 Note that these are not final, and will probably change.
 
+
+
 Soon, we will add in... 
     Additional functionality for the editor (beyond a JTextPane)
     Provide additional QCode features that will aide in macros for faster development (i.e. something similar to #define, and something that will aide in imports (automatically import everything in a certain list)
