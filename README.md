@@ -17,7 +17,7 @@ Currently:
     We can enter an environment out of the default class by the tags "@--" and "--@"
     We can enter an environment at the start of this class (the preamble) by the tags "#--" and "--#"
 
-    One can save a QCode file through the hotkey "CTRL+S". One can save a java file through the hotkey "CTRL+ALT+S". One can open a .qcode file using the hotkey "CTRL+O". We cannot open a java file as a qcode file (we would have to do some crazy parsing to handle all those cases yo). 
+One can save a QCode file through the hotkey "CTRL+S". One can save a java file through the hotkey "CTRL+ALT+S". One can open a .qcode file using the hotkey "CTRL+O". We cannot open a java file as a qcode file (we would have to do some crazy parsing to handle all those cases yo). 
 
 Note that these are not final, and will probably change.
 
