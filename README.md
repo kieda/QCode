@@ -5,9 +5,11 @@ QCode is a dynamic programming environment for java, allowing for faster develop
 
 QCode, when opened in an existing project, all loaded classes are available for QCode to access. This means that a programmer can dynamically change variables, and even insert code into an application that is already open. 
 
- We allow the programmer to save the QCode file, which saves the full QCode text, or the programmer can save the generated java file itself.
+We allow the programmer to save the QCode file, which saves the full QCode text, or the programmer can save the generated java file itself.
 
 QCode is fantastic for a user whi wants to test code on the fly, or wants to build a gui environment quickly. 
+
+Run and open QCode in Netbeans.
 
 Currently:
     The default class a QCode environment is "Pool".
@@ -15,7 +17,7 @@ Currently:
     We can enter an environment out of the default class by the tags "@--" and "--@"
     We can enter an environment at the start of this class (the preamble) by the tags "#--" and "--#"
 
-    One can save a QCode file through the hotkey "CTRL+S". One can save a java file through the hotkey "CTRL+ALT+S". We will soon have a "save as" option.
+    One can save a QCode file through the hotkey "CTRL+S". One can save a java file through the hotkey "CTRL+ALT+S". One can open a .qcode file using the hotkey "CTRL+O". We cannot open a java file as a qcode file (we would have to do some crazy parsing to handle all those cases yo). 
 
 Note that these are not final, and will probably change.
 
