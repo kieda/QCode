@@ -44,7 +44,7 @@ public String doubleString(String s){
 } --@
 ```
 This should give the output :
-```java "[0, 1, 2, 3, 4] : [0, 1, 2, 3, 4]" ```
+```"[0, 1, 2, 3, 4] : [0, 1, 2, 3, 4]" ```
 
 QCode 2.0 vs 1.0
 =====
