@@ -8,11 +8,17 @@ Check out the code! You can set it up for different builds to do vastly differen
 Note that if one opens a QCode instance on the same jvm and classloader, the QCode application should have access to the classes of the project that opened it. This allows us to 'scaffold' a project by building off an existing one, and allows us to test existing code quickly.
 
 Some QCode builds use QLang, a bit of a faster way to write and test basic java code. QLang is typically in a '.qc' file. In QLang, the outermost block of syntax is a no-arg, non-static main method. We run the main method by default. The returned value of this method is displayed as the program's result, where null means no result. We can add methods, fields, and internal classes by the tags
+
 ... `"<--" and "-->"`
+
 We can add classes by the tags
+
 ... `"@--" and "--@"`
+
 We can add imports and set the package by the tags
+
 ... `"#--" and "--#"`
+
 Currently, the default ServerInputStreamListener assumes the file we are watching is in QLang 
 
 Example QLang program : 
