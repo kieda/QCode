@@ -67,7 +67,7 @@ public class BasicQCodeServer extends QCodeServer{
      * @param p the path where we will get our input from
      * @throws IOException if there are any problems reading the file or using the ports
      * @throws NullPointerException if {@code outClassPath} is {@code null}
-     * @throws IllegalFormatException if the string is not in the desired format, or is not a valid file name, package name, or class name
+     * @throws IllegalArgumentException if the string is not in the desired format
      */
     public BasicQCodeServer(int compilationPort, int outPort, int errPort, String outClassPath, Path p) throws IOException{
         super(
