@@ -1,6 +1,8 @@
 package com.salesforce.zkieda.util;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -9,14 +11,15 @@ import java.util.concurrent.ExecutorService;
 public class MultiBufferedOutputStream extends BufferedOutputStream {
     private final OutputStreamInternal os_internal;
     
-    
     private static class OutputStreamInternal extends OutputStream{
         private ExecutorService exec;
         {
             exec = java.util.concurrent.Executors.newFixedThreadPool(2);
         }    
-        private List<OutputStream> clients = new ArrayList<>();
-        private List<Runnable> clientRunnables = new ArrayList<>();
+        
+        private final List<OutputStream> clients = new ArrayList<>();
+        private final List<Runnable> clientRunnables = new ArrayList<>();
+        
         @Override
         public void write(byte[] b, int off, int len) throws IOException {
             //delegate a runnable to writing each of these
