@@ -1,13 +1,11 @@
 package com.salesforce.zkieda.qcode.server;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
-import java.nio.file.Path;
 import java.util.Arrays;
-
-import com.salesforce.zkieda.qcode.drivers.QMain;
 
 /**
  * used to run a job
@@ -26,11 +24,11 @@ import com.salesforce.zkieda.qcode.drivers.QMain;
  * @version 0.8
  */
 public class RunJob implements Runnable{
-    private Path p;
+    private JavaOutputPath p;
 //    private PrintStream qCodeOut, qCodeErr;
     
     /** run the qcode class at the given path */
-    public RunJob(Path p, PrintStream qCodeOut, PrintStream qCodeErr) {
+    public RunJob(JavaOutputPath p, PrintStream qCodeOut, PrintStream qCodeErr) {
         this.p = p;
 //        this.qCodeErr = qCodeErr;
 //        this.qCodeOut = qCodeOut;
@@ -40,9 +38,9 @@ public class RunJob implements Runnable{
     public void run(){
         try {
           URLClassLoader classLoader = URLClassLoader.newInstance(
-                  new URL[] {p.getParent().toUri().toURL()}
+                  new URL[] {new File(p.getPath()).toURI().toURL()}
                   );
-          Class<?> cls = Class.forName(QMain.CLASS_NAME + QMain.VERSION, true, classLoader);
+          Class<?> cls = Class.forName(p.getJavaPackage() + "." + p.getJavaClass(), true, classLoader);
           Object instance;
           instance = cls.newInstance();
           Method m = cls.getMethod("main");

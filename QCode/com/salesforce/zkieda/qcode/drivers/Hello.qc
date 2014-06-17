@@ -1,13 +1,28 @@
 #-- 
 	import java.io.*;
 	import static com.salesforce.zkieda.util.ThreadIO.*;
+	import com.salesforce.zkieda.util.*;
 --#
 
-File f = new File("./test");
+
+File f = new File("./test-out");
 sout(f.exists()); // should print "true" to sys err
+
+sout("hello world!");
 
 //output on this thread redirected to file
 dup2(System.out, new PrintStream(new FileOutputStream(f)));
+
+new PrintStreamThread(
+   new Runnable(){
+       public void run(){
+           sout("############");
+       }
+   }
+).dup2(System.out, ThreadIO.OUT)
+ .start();
+ 
+
 
 List k = new ArrayList();
 for(char c = 'a'; c < 'z'; c++)
@@ -22,7 +37,6 @@ for(int i = 0; i < 10; i++){
 
 l.add(fib(5));
 
-
 C t = new C(4, fib(20));
 System.out.println("test err");
 System.err.println("test out");
@@ -31,6 +45,7 @@ System.err.println("test out");
 sout(
 	mult("$", 100)
 );
+return "asdfasdf";
 
 <-- 
 int fib(int i){
@@ -64,8 +79,12 @@ class C {
 		return i1 + i2;
 	}
 }
-
-class QA{
-}
-
 -->
+
+@--
+class Main{
+	public Main(){
+		$Pool$.sout("nope");
+	}
+}
+--@

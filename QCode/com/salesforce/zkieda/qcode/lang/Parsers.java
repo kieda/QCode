@@ -2,7 +2,7 @@ package com.salesforce.zkieda.qcode.lang;
 
 import java.io.*;
 
-import com.salesforce.zkieda.qcode.drivers.QMain;
+import com.salesforce.zkieda.qcode.server.JavaOutputPath;
 
 public class Parsers {
     /** shady default methods */
@@ -44,17 +44,23 @@ public class Parsers {
      * @param classTxt the markup text
      * @return string java src form of the markup
      */
-    public static String getClassForCompile(String classTxt){
+    public static String getClassForCompile(JavaOutputPath classPath, String classTxt){
         String[] s = parse(classTxt);
         if(s==null)return null;
-        StringBuilder sb = 
+        
+        StringBuilder sb = new StringBuilder(classTxt.length() * 2);
+        if(classPath.getJavaPackage()!=null)
+            sb.append("package ")
+              .append(classPath.getJavaPackage())
+              .append(";");
+         
              //header
-             new StringBuilder(s[3])
+         sb .append(s[3])
             .append("\nimport java.util.*;"
                    +"import static java.lang.Math.*;"
                    +"import java.math.*;"
                    +"public class ")
-                       .append(QMain.CLASS_NAME + QMain.VERSION).append("{");
+                       .append(classPath.getJavaClass()).append("{");
         
                         //method declarations 
                         for(String method : DEFAULT_METHODS)

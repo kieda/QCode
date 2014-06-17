@@ -6,12 +6,11 @@ package com.salesforce.zkieda.qcode.server;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
 import javax.tools.*;
-
-import com.salesforce.zkieda.qcode.drivers.QMain;
 
 /**
  * represents a compilation job, given some input stream for 
@@ -25,10 +24,11 @@ public class CompilationJob {
      * Based on the article at http://www.accordess.com/wpblog/an-overview-of-java-compilation-api-jsr-199/
      */
     public static Path doCompilation (
+            JavaOutputPath classPath,
             String sourceCode
             ){
         /*Creating dynamic java source code file object*/
-        SimpleJavaFileObject fileObject = new DynamicJavaSourceCodeObject (QMain.CLASS_NAME + QMain.VERSION, sourceCode) ;
+        SimpleJavaFileObject fileObject = new DynamicJavaSourceCodeObject (classPath.getJavaClass(), sourceCode) ;
         JavaFileObject javaFileObjects[] = new JavaFileObject[]{fileObject} ;
         
         //Instantiate java compiler
@@ -43,14 +43,25 @@ public class CompilationJob {
  
         /*Prepare any compilation options to be used during compilation*/
         
-//        String[] compileOptions;
-//        if(output_dir == null) compileOptions = new String[]{};
-//        else compileOptions = new String[]{"-d", output_dir.getPath()};//"-d", "bin"} ;
-//        String[] compileOptions = new String[]{};
-//        Iterable<String> compilationOptionss = Arrays.asList(compileOptions);
+        String outPath = classPath.getPath();
+        String[] compileOptions;
+        if(outPath == null) {
+            outPath = "./";
+            compileOptions = new String[]{};
+        }
+        else {
+            compileOptions = new String[]{"-d", outPath};
+        }
+        File f = new File(outPath);
+        try{
+            if(!f.exists())
+                Files.createDirectories(f.toPath());
+        }catch(IOException e){e.printStackTrace();}
+        
+        Iterable<String> compilationOptions = Arrays.asList(compileOptions);
  
         /*Create a compilation task from compiler by passing in the required input objects prepared above*/
-        JavaCompiler.CompilationTask compilerTask = compiler.getTask(null, stdFileManager, diagnostics, null, null, compilationUnits) ;
+        JavaCompiler.CompilationTask compilerTask = compiler.getTask(null, stdFileManager, diagnostics, compilationOptions, null, compilationUnits) ;
         
         //Perform the compilation by calling the call method on compilerTask object.
         boolean status = compilerTask.call();
@@ -72,11 +83,13 @@ public class CompilationJob {
         }
         
         if(status){
-            //return path to compiled object
-            File f = new File("./" + QMain.CLASS_NAME + QMain.VERSION + ".class");
-            if(!f.exists()) return null;
             
-            return f.toPath(); 
+            //return path to compiled object
+            File ff = new File(outPath + classPath.getJavaPackage().replace(".", "/") + "/",  classPath.getJavaClass()+ ".class");
+            
+            if(!ff.exists()) return null;
+            
+            return ff.toPath(); 
         } else
             return null;
     }

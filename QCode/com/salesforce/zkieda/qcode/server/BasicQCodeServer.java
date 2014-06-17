@@ -3,6 +3,8 @@ package com.salesforce.zkieda.qcode.server;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.salesforce.zkieda.qcode.lang.JavaClassParser;
+
 /**
  * represents using a basic qcode server with the default settings
  *
@@ -73,7 +75,10 @@ public class BasicQCodeServer extends QCodeServer{
         super(
             new BasicEvictionPolicy(32, 1.f),
             new QCodeSocketServerOut(compilationPort, outPort, errPort),
-            new PathInputStreamWatcher(p));
+            new PathInputStreamWatcher(p),
+            new JavaClassParser(outClassPath)
+        );
+        
         printro(outPort, errPort, errPort, p);
     }
 }

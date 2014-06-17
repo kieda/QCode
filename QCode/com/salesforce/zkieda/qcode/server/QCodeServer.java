@@ -3,13 +3,25 @@ package com.salesforce.zkieda.qcode.server;
 import java.io.*;
 import java.nio.file.Path;
 
-import com.salesforce.zkieda.qcode.drivers.QMain;
 import com.salesforce.zkieda.qcode.lang.Parsers;
 import com.salesforce.zkieda.util.PrintStreamThread;
 import com.salesforce.zkieda.util.ThreadIO;
 
 /**
  * central component to the qcode server
+ * 
+ * todo increase modularity -- we don't care if we will be running .qc files and running 
+ * them, or if we will be running java files. Thus, we will break them down into a couple 
+ * steps
+ * 
+ * 1) a preprocessing stage for the files that are modified
+ * 2) a generic preprocessing stage (allows for #define)
+ * 3) a stage that takes the processed set of data
+ *      in some builds :
+ *          a) compile the java class
+ *          b) do something after with the java (run it, or just load it up)
+ *      in other builds : 
+ *          a) run the files (like using .js)
  *
  * @author zkieda
  * @since 190
@@ -36,6 +48,8 @@ public class QCodeServer {
     //watcher for an input stream change. Notifies our listener
     private InputStreamWatcher qsi;
     
+    private JavaOutputPath classPath;
+    
     private static PrintStream makePrintStream(
             OutputStream os,
             PrintStream defaultIfNull
@@ -50,17 +64,19 @@ public class QCodeServer {
         //where we pipe our various output to
         QCodeServerOut qso,
         
-        InputStreamWatcher qsi
+        InputStreamWatcher qsi,
+        
+        JavaOutputPath classPath
             ){
         this.ep = ep;
         this.qcso = qso;
         this.qsi = qsi;
+        this.classPath = classPath;
         
         sisw = new ServerInputStreamListener();
         qsi.setListener(sisw);
         
         tem = new ThreadEvictionManager(ep);
-        
         
         ThreadIO.replaceSystemErr();
         ThreadIO.replaceSystemOut();
@@ -82,35 +98,25 @@ public class QCodeServer {
     }
     
     
-    //server has some outputs
-    //and the server has an input file
-    //the server must listen for when the input file changes, so we 
-    
-    // .onChange(InputStreamRunnable r)
-    // InputStreamRunnable 
-    //  + run(InputStream r)
-    
-    //used to 
     private class ServerInputStreamListener implements InputStreamListener{
         @Override
         public void onChange(InputStream is) {
             //way too ghetto do not look
-            QMain.VERSION++;
             
             try{
                 //java class definition
                 String javaClass = Parsers.getClassForCompile(
-                        Parsers.inputStreamToString(is));
+                        classPath, Parsers.inputStreamToString(is));
                 if(javaClass == null){
                     //error on compilation. Error details should be sent via 
                     //complOut
                     return;
                 }              
-              Path res = CompilationJob.doCompilation(javaClass);
+              Path res = CompilationJob.doCompilation(classPath, javaClass);
               if(res != null){
                   
                   tem.addThread(
-                      new PrintStreamThread(new RunJob(res, qCodeOut, qCodeErr))
+                      new PrintStreamThread(new RunJob(classPath, qCodeOut, qCodeErr))
                           .dup2(System.out, qCodeErr)
                           .dup2(System.err, qCodeOut)
                       , 5000);
