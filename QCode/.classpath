@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/etc/java-libs/commons-lang3-3.3.2-bin.tar.gz"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/guava"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/guava-testlib"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -1,7 +1,11 @@
 package com.salesforce.zkieda.qcode.server;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 
 import com.salesforce.zkieda.util.MultiBufferedOutputStream;
@@ -19,9 +23,9 @@ import com.salesforce.zkieda.util.MultiBufferedOutputStream;
  * @version 0.3
  */
 public class QCodeSocketServerOut implements QCodeServerOut{
-    private int compilationOutPort, qCodeOutPort, qCodeErrPort;
+    private final int compilationOutPort, qCodeOutPort, qCodeErrPort;
     private ServerSocket compilationOutSocket, qCodeOutSocket, qCodeErrSocket;
-    
+    private ServerOutputPort compilationOut, qCodeOut, qCodeErr;
     
     /**
      * Note that if you choose the same port for multiple outputs, we will create only 
@@ -52,36 +56,57 @@ public class QCodeSocketServerOut implements QCodeServerOut{
         if(compilationOutPort < 0){
             compilationOutSocket = new ServerSocket(0);
             compilationOutPort = compilationOutSocket.getLocalPort();
+            compilationOut = new ServerOutputPort(compilationOutSocket);
             
             if(qCodeOutPort == compilationOutPort){
                 qCodeOutSocket = compilationOutSocket;
                 qCodeOutPort = compilationOutPort;
+                qCodeOut = compilationOut;
             }
             if(qCodeErrPort == compilationOutPort){
                 qCodeErrSocket = compilationOutSocket;
                 qCodeErrPort = compilationOutPort;
+                qCodeErr = compilationOut;
             }
+            compilationOut.run();
         }
         if(qCodeOutPort < 0){
             qCodeOutSocket = new ServerSocket(0);
             qCodeOutPort = qCodeOutSocket.getLocalPort();
+            qCodeOut = new ServerOutputPort(qCodeOutSocket);
             if(qCodeErrPort == qCodeOutPort){
                 qCodeErrPort = qCodeOutPort;
                 qCodeErrSocket = qCodeOutSocket;
+                qCodeErr = qCodeOut;
             }
+            qCodeOut.run();
         }
         if (qCodeErrPort < 0) {
             qCodeErrSocket = new ServerSocket(0);
             qCodeErrPort = qCodeErrSocket.getLocalPort();
+            qCodeErr = new ServerOutputPort(qCodeErrSocket);
+            qCodeErr.run();
         }
         
         this.compilationOutPort = compilationOutPort;
         this.qCodeErrPort = qCodeErrPort;
         this.qCodeOutPort = qCodeOutPort;
         
-        if(qCodeErrSocket == null) qCodeErrSocket = new ServerSocket(qCodeErrPort);
-        if(qCodeOutSocket == null) qCodeOutSocket = new ServerSocket(qCodeOutPort);
-        if(compilationOutSocket == null) compilationOutSocket = new ServerSocket(compilationOutPort);
+        if(qCodeErrSocket == null) {
+        	qCodeErrSocket = new ServerSocket(qCodeErrPort);
+        	qCodeErr = new ServerOutputPort(qCodeErrSocket);
+        	qCodeErr.run();
+        }
+        if(qCodeOutSocket == null) {
+        	qCodeOutSocket = new ServerSocket(qCodeOutPort);
+        	qCodeOut = new ServerOutputPort(qCodeOutSocket);
+        	qCodeOut.run();
+        }
+        if(compilationOutSocket == null){ 
+        	compilationOutSocket = new ServerSocket(compilationOutPort);
+        	compilationOut = new ServerOutputPort(compilationOutSocket);
+        	compilationOut.run();
+        }
     }
     
     
@@ -96,18 +121,19 @@ public class QCodeSocketServerOut implements QCodeServerOut{
     
     @Override
     public OutputStream getCompilationOut() {
-        return null;
+        return compilationOut;
     }
 
     @Override
     public OutputStream getQCodeOut() {
-        return null;
+        return qCodeOut;
     }
 
     @Override
     public OutputStream getQCodeErr() {
-        return null;
+        return qCodeErr;
     }
+    
     public static void main(String[] args) throws Exception {
         final ServerSocket ss = new ServerSocket(1234);
         final MultiBufferedOutputStream mbs
@@ -140,7 +166,7 @@ public class QCodeSocketServerOut implements QCodeServerOut{
                     } catch (Exception e) {}
                 }
             }
-        ).start();;
+        ).start();
         
         
         Socket socket = new Socket(InetAddress.getLocalHost(), 1234);

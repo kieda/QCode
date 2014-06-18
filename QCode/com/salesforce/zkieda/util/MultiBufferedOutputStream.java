@@ -1,24 +1,37 @@
 package com.salesforce.zkieda.util;
 
-import java.io.*;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
  * This class is an output stream used to send information to multiple clients.
- *
+ * 
+ * @temp
+ * @I_want_to
+ * {concurrent, threaded} one to many output stream 
+ * 
  * @author zkieda
  * @since 180
  */
 public class MultiBufferedOutputStream extends OutputStream {
     private final List<OutputStreamInternal> os_internal;
-    private ExecutorService printExecutor = Executors.newCachedThreadPool(); 
+    private final ExecutorService printExecutor = Executors.newFixedThreadPool(4); 
     
     //thread timeout
     private final long timeOut;
     private final TimeUnit timeOutUnit;
+    
     
     /**
      * This output stream is used as a single incoming stream, and multiple 
@@ -83,9 +96,14 @@ public class MultiBufferedOutputStream extends OutputStream {
         }
 
         /** Flush the internal buffer */
-        private void flushBuffer() throws IOException {
-            try{
-                printExecutor.submit(run).get(timeOut, timeOutUnit);
+        private synchronized void flushBuffer() throws IOException {
+        	
+            try{            	
+                Future fu = printExecutor.submit(run);
+                
+                if(timeOutUnit==null) fu.get();
+                else fu.get(timeOut, timeOutUnit);
+                
                 if(run.getException() != null)
                     throw run.getException();
             }catch(TimeoutException | InterruptedException | ExecutionException e){
@@ -148,6 +166,17 @@ public class MultiBufferedOutputStream extends OutputStream {
             count += len;
         }
 
+        /** 
+         * if we have many rapid succession calls we can slow down the system
+         * only publicly / manually be able to flush every 50 milliseconds
+         */
+        private final DtHandler dth = new DtHandler(){
+        	@Override
+        	public boolean allowDt(long amt) {
+        		return amt >= 50;
+        	}
+        };
+        
         /**
          * Flushes this buffered output stream. This forces any buffered
          * output bytes to be written out to the underlying output stream.
@@ -157,8 +186,10 @@ public class MultiBufferedOutputStream extends OutputStream {
          */
         @Override
         public synchronized void flush() throws IOException {
-            flushBuffer();
-            out.flush();
+        	if(dth.poll()){
+	            flushBuffer();
+	            out.flush();
+        	}
         }
         
         class FlushRunnable implements Runnable {
@@ -177,7 +208,7 @@ public class MultiBufferedOutputStream extends OutputStream {
                     this.exception = null;
                 } catch (IOException e) {
                     this.exception = e;
-                }
+                } 
             }
         }
     }
@@ -202,9 +233,17 @@ public class MultiBufferedOutputStream extends OutputStream {
         this(500, TimeUnit.MILLISECONDS);
     }
     
-    
+    /**
+     * creates a multi buffered output stream with the given timeout 
+     * for thread<br/><br/> 
+     * 
+     * if {@code timeOutUnit==null}, we have no timeout.<br/><br/>
+     * 
+     * for example, if we have a timeout of 1 second, an output stream that is 
+     * taking longer than one second to flush the data will be closed.<br/><br/>
+     */
     public MultiBufferedOutputStream(long timeOut, TimeUnit timeOutUnit) {
-        os_internal = new ArrayList<>();
+        os_internal = Collections.synchronizedList(new ArrayList<OutputStreamInternal>());
         this.timeOut = timeOut;
         this.timeOutUnit = timeOutUnit;
     }
@@ -217,15 +256,35 @@ public class MultiBufferedOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         IOException exception = null;
-        for (OutputStreamInternal os : os_internal) {
-            try{
-                os.write(b);
-            } catch(IOException e){
-                if(exception == null){
-                    exception = new IOException("Exception while printing to OutputStream " + os.out);
-                }
-                exception.addSuppressed(e);
-            }
+        synchronized(os_internal){
+	        for (OutputStreamInternal os : os_internal) {
+	            try{
+	                os.write(b);
+	            } catch(IOException e){
+	                if(exception == null){
+	                    exception = new IOException("Exception while printing to OutputStream " + os.out);
+	                }
+	                exception.addSuppressed(e);
+	            }
+	        }
+        }
+        if(exception != null) throw exception;
+    }
+    
+    @Override
+    public void flush() throws IOException {
+    	IOException exception = null;
+        synchronized(os_internal){
+	        for (OutputStreamInternal os : os_internal) {
+	            try{
+	                os.flush();
+	            } catch(IOException e){
+	                if(exception == null){
+	                    exception = new IOException("Exception while printing to OutputStream " + os.out);
+	                }
+	                exception.addSuppressed(e);
+	            }
+	        }
         }
         if(exception != null) throw exception;
     }

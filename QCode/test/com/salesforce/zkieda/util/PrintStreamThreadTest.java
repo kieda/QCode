@@ -13,9 +13,9 @@ import java.util.Scanner;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.common.base.Joiner;
 import com.salesforce.zkieda.util.PrintStreamThread;
 import com.salesforce.zkieda.util.ThreadIO;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 public class PrintStreamThreadTest {
 	private static String[] inTest1Lines = {"this is a test","new line"};
@@ -54,7 +54,7 @@ public class PrintStreamThreadTest {
             		assertTrue(lines[i].equals(s.nextLine()));
             	}
             }
-        }).dup2(System.in, stringInputStream(StringUtils.join(lines, "\n"))).start();
+        }).dup2(System.in, stringInputStream(Joiner.on('\n').join(lines))).start();
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class PrintStreamThreadTest {
 		checkRead(inTest1Lines);
 		checkRead(inTest2Lines);
 		
-		Scanner s = new Scanner(stringInputStream(StringUtils.join(inTest1Lines, "\n")));
+		Scanner s = new Scanner(stringInputStream(Joiner.on('\n').join(inTest1Lines)));
     	
     	for(int i = 0; s.hasNextLine(); i++){
     		assertTrue(inTest1Lines[i].equals(s.nextLine()));

@@ -6,17 +6,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 import com.salesforce.zkieda.qcode.server.BasicQCodeServer;
-
 /**
  * main function for making qcode THIS IS SHADY  SUPER CONFIDENTIAL TM SALESFORCE DO NOT LOOK
  */
 public class QMain {
 //    public final static String CLASS_NAME = "$Pool$";
 //    public static int VERSION = 0;
-    
+	
     //used for testing. 
     public static void main(String[] args) throws IOException, URISyntaxException, Exception{
-        
+    	
         File f = new File(QMain.class.getResource("Hello.qc").toURI());
         Path p = f.toPath();
         

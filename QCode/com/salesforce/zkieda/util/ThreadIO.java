@@ -1,9 +1,15 @@
 package com.salesforce.zkieda.util;
 
-import java.io.*;
+import static com.salesforce.zkieda.util.DevNullStream.NULL_OUTPUT_STREAM;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.salesforce.zkieda.util.DevNullStream.DevNullInputStream;
 
 /** 
  * This is a modified version of 
@@ -27,15 +33,11 @@ public class ThreadIO  {
     private static PrintStream consoleErr;
     private static InputStream consoleIn;
     //discards all input
-    private static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
-        @Override public void write(int b) throws IOException {}};
     
     //these are just markers, so we know we should replace them when the time comes
     public static final PrintStream OUT = new PrintStream(NULL_OUTPUT_STREAM, false);
     public static final PrintStream ERR = new PrintStream(NULL_OUTPUT_STREAM, false);
-    public static final InputStream IN = new InputStream(){
-        @Override public int read() throws IOException {return 0;}};
-    
+    public static final InputStream IN = new DevNullInputStream();
     
     
     public static class ThreadPrintStream
