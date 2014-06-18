@@ -2,7 +2,9 @@ package com.salesforce.zkieda.util;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -49,9 +51,9 @@ import java.util.Map.Entry;
  */
 public class PrintStreamThread extends Thread {
     //what we make system out, in, and err dup 2
-    private Map<PrintStream, PrintStream> dupPrintMap 
+    private final Map<PrintStream, PrintStream> dupPrintMap 
         = new HashMap<>(4);
-    private Map<InputStream, InputStream> dupInputMap 
+    private final Map<InputStream, InputStream> dupInputMap 
         = new HashMap<>(4);
     
 
@@ -151,26 +153,5 @@ public class PrintStreamThread extends Thread {
     public PrintStreamThread go(){
         super.start();
         return this;
-    }
-}
-class PrintStreamThreadTest{
-    public static void main(String[] args) {
-        //replace the system's IO with one that can have different 
-        //io for each thread
-        ThreadIO.replaceSystemIO();
-         
-         //This new thread has different IO
-         new PrintStreamThread(new Runnable(){
-             @Override public void run(){ 
-                System.out.println("hello err!"); 
-                System.err.println("hello out!"); 
-             }
-         })
-         .dup2(System.err, ThreadIO.OUT)
-         .dup2(System.out, ThreadIO.ERR)
-         .start();
-         
-         System.out.println("bye out!");
-         System.err.println("bye err!");
     }
 }
