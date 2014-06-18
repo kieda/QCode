@@ -3,6 +3,8 @@ package com.salesforce.zkieda.qcode.server;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.salesforce.zkieda.qcode.lang.JavaClassParser;
+
 /**
  * represents using a basic qcode server with the default settings
  *
@@ -12,6 +14,7 @@ import java.nio.file.Path;
  * @version 1.0
  */
 public class BasicQCodeServer extends QCodeServer{
+    
     /** 
      * the folder, package, and main class that we will listen to
      */
@@ -38,9 +41,9 @@ public class BasicQCodeServer extends QCodeServer{
      *
      * Uses the default compilation folder, package, and class name
      * 
-     * @param compilationPort clients that connect to this port will recieve information about the compilation process (failures, successes, errors, etc)
-     * @param outPort clients that connect to this port will recieve the actual output of the program, and the result of running the QCode program
-     * @param errPort clients that connect to this port will recieve the actual errror output of the qcode program, and any thrown errors that might occur
+     * @param compilationPort clients that connect to this port will receive information about the compilation process (failures, successes, errors, etc)
+     * @param outPort clients that connect to this port will receive the actual output of the program, and the result of running the QCode program
+     * @param errPort clients that connect to this port will receive the actual error output of the qcode program, and any thrown errors that might occur
      * @param p the path where we will get our input from
      * @throws IOException if there are any problems reading the file or using the ports
      */
@@ -53,9 +56,9 @@ public class BasicQCodeServer extends QCodeServer{
      * (a file path for the input, server ports for the output, and a basic 
      * eviction policy)
      * 
-     * @param compilationPort clients that connect to this port will recieve information about the compilation process (failures, successes, errors, etc)
-     * @param outPort clients that connect to this port will recieve the actual output of the program, and the result of running the QCode program
-     * @param errPort clients that connect to this port will recieve the actual errror output of the qcode program, and any thrown errors that might occur
+     * @param compilationPort clients that connect to this port will receive information about the compilation process (failures, successes, errors, etc)
+     * @param outPort clients that connect to this port will receive the actual output of the program, and the result of running the QCode program
+     * @param errPort clients that connect to this port will receive the actual error output of the qcode program, and any thrown errors that might occur
      * @param outClassPath a non-null string in the form 
      * <pre>
      * @code{
@@ -73,7 +76,10 @@ public class BasicQCodeServer extends QCodeServer{
         super(
             new BasicEvictionPolicy(32, 1.f),
             new QCodeSocketServerOut(compilationPort, outPort, errPort),
-            new PathInputStreamWatcher(p));
+            new PathInputStreamWatcher(p),
+            new JavaClassParser(outClassPath)
+        );
+        
         printro(outPort, errPort, errPort, p);
     }
 }

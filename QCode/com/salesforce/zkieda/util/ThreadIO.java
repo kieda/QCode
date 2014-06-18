@@ -26,9 +26,6 @@ public class ThreadIO  {
     private static PrintStream consoleOut;
     private static PrintStream consoleErr;
     private static InputStream consoleIn;
-    {
-        new File("").get
-    }
     //discards all input
     private static final OutputStream NULL_OUTPUT_STREAM = new OutputStream() {
         @Override public void write(int b) throws IOException {}};

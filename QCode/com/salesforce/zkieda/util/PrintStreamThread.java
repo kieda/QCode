@@ -105,6 +105,7 @@ public class PrintStreamThread extends Thread {
      */
     public PrintStreamThread dup2(InputStream src, InputStream target){
         dupInputMap.put(src, target);
+        
         return this;
     }
     
