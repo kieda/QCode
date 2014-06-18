@@ -23,10 +23,13 @@ import com.salesforce.zkieda.util.ThreadIO;
 public class ServerOutputPort extends OutputStream implements Runnable{
     private final MultiBufferedOutputStream outputInternal;
     private final ServerSocket serverSocket;
-    private static final int LISTENER_PRIORITY = 2;
+    private static final int LISTENER_PRIORITY = 1; // either 1 or 2 is good. We want a low priority.
     private Thread socketGatherer;
     private final AtomicBoolean cont = new AtomicBoolean(true);
     private final PrintStream errorPrintStream;
+    
+    //TODO VERY IMPORTANT check if we are closing the socket on fail 
+    //(probably not), find out way to close it!!!
     
     private final Runnable serverSocketListener = new Runnable() {
 		@Override
@@ -94,6 +97,15 @@ public class ServerOutputPort extends OutputStream implements Runnable{
     	outputInternal.flush();
     }
 }
+
+/**
+ * basic test to see if ServerOutputPort works, and to see if there are any problems 
+ * with rapid amounts of printing, and if the system seems to work. 
+ * 
+ * TODO zak unit tests for multiple listening threads
+ * 
+ * @author zkieda
+ */
 class ServerOutputPortTest{
 	public static void main(String[] args) throws Exception{
 		final int PORT_NUM = 1234;
@@ -125,7 +137,7 @@ class ServerOutputPortTest{
 		 .start();
 		
 		//listener that prints output from port 1234 and broadcasts its output
-//		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 4; i++)
 		new Thread(){
 			@Override
 			public void run(){

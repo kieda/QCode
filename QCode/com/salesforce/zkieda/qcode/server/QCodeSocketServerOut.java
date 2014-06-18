@@ -2,13 +2,7 @@ package com.salesforce.zkieda.qcode.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Scanner;
-
-import com.salesforce.zkieda.util.MultiBufferedOutputStream;
 
 /**
  * implementation which outputs qcode information via sockets on the server.
@@ -47,12 +41,21 @@ public class QCodeSocketServerOut implements QCodeServerOut{
     public QCodeSocketServerOut(int compilationOutPort, int qCodeOutPort, int qCodeErrPort) 
             throws IOException{
         
-        //terrible design...
+    	//TODO zak this is terrible.
 
         //todo custom structure for finding out groups in a series of integers. If negative, make a 
         //unique one.
+    	
+    	//generalize --> comparables, grouping equivalents.
+    	//we can then use Function<...> on each group. This will be used to get the port, server 
+    	//socket, and output stream of each.  
         
-        
+    	//TODO zak (trivial refactoring) ServerSocketDecider uses above structure, has methods 
+    	//getComplSocket, getQOutSocket, getQErrSocket, getComplPort ... 
+    	
+    	//TODO zak important : have a way for us to block till a user connects. We can then boot up 
+    	//qcode, then have enough time to boot up a listener without race condition or losing data
+    	
         if(compilationOutPort < 0){
             compilationOutSocket = new ServerSocket(0);
             compilationOutPort = compilationOutSocket.getLocalPort();
@@ -109,16 +112,6 @@ public class QCodeSocketServerOut implements QCodeServerOut{
         }
     }
     
-    
-    //todo : have an outputstream which aggregates connected clients. Then we will send a 
-    //message from one, which will cause a thread pool to send a series of messages to the 
-    //connected clients. We will attempt to buffer it.   
-    
-    //also have a custom structure + thread for connecting clients. These clients will be put 
-    //into a list for us to send information to,
-    
-    //todo custom structure for this
-    
     @Override
     public OutputStream getCompilationOut() {
         return compilationOut;
@@ -134,46 +127,13 @@ public class QCodeSocketServerOut implements QCodeServerOut{
         return qCodeErr;
     }
     
-    public static void main(String[] args) throws Exception {
-        final ServerSocket ss = new ServerSocket(1234);
-        final MultiBufferedOutputStream mbs
-             = new MultiBufferedOutputStream();
-//        final Object lock = new Object();
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    try {
-                        Socket client = ss.accept();
-                        mbs.addOutputStream(client.getOutputStream());
-                    } catch (Exception e) {}
-                }
-            }
-        });
-        t.start();
-        
-        new Thread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    PrintStream ps = new PrintStream(mbs);
-                    try {
-                        int i = 0;
-                        while (true) {
-                            ps.println("hello " + (i++));
-                            Thread.sleep(1000);
-                        }
-                    } catch (Exception e) {}
-                }
-            }
-        ).start();
-        
-        
-        Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
-        Scanner s = new Scanner(socket.getInputStream());
-        
-        while(s.hasNextLine()){
-            System.out.println(s.nextLine());
-        }
-    }
+    public int getComplOutPort() {
+		return compilationOutPort;
+	}
+    public int getqCodeOutPort() {
+		return qCodeOutPort;
+	}
+    public int getqCodeErrPort() {
+		return qCodeErrPort;
+	}
 }

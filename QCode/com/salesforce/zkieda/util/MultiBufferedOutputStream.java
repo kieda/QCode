@@ -3,9 +3,14 @@ package com.salesforce.zkieda.util;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +37,8 @@ public class MultiBufferedOutputStream extends OutputStream {
     private final long timeOut;
     private final TimeUnit timeOutUnit;
     
+    //time we should wait between flushing
+    private static final int WAIT_TIME = 20;
     
     /**
      * This output stream is used as a single incoming stream, and multiple 
@@ -168,12 +175,13 @@ public class MultiBufferedOutputStream extends OutputStream {
 
         /** 
          * if we have many rapid succession calls we can slow down the system
-         * only publicly / manually be able to flush every 50 milliseconds
+         * only publicly / manually be able to flush every {@code WAIT_TIME}
+         * milliseconds
          */
-        private final DtHandler dth = new DtHandler(){
+        private final DtHandler timeBetweenManualFlushes = new DtHandler(){
         	@Override
         	public boolean allowDt(long amt) {
-        		return amt >= 50;
+        		return amt >= WAIT_TIME;
         	}
         };
         
@@ -186,7 +194,7 @@ public class MultiBufferedOutputStream extends OutputStream {
          */
         @Override
         public synchronized void flush() throws IOException {
-        	if(dth.poll()){
+        	if(timeBetweenManualFlushes.poll()){
 	            flushBuffer();
 	            out.flush();
         	}
@@ -287,5 +295,54 @@ public class MultiBufferedOutputStream extends OutputStream {
 	        }
         }
         if(exception != null) throw exception;
+    }
+}
+
+/**
+ * basic test for MultiBufferedOutputStream
+ * @author zkieda
+ */
+class MultiBufferedOutputStreamTest{
+	public static void main(String[] args) throws Exception {
+        final ServerSocket ss = new ServerSocket(1234);
+        final MultiBufferedOutputStream mbs
+             = new MultiBufferedOutputStream();
+//        final Object lock = new Object();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        Socket client = ss.accept();
+                        mbs.addOutputStream(client.getOutputStream());
+                    } catch (Exception e) {}
+                }
+            }
+        });
+        t.start();
+        
+        new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    PrintStream ps = new PrintStream(mbs);
+                    try {
+                        int i = 0;
+                        while (true) {
+                            ps.println("hello " + (i++));
+                            Thread.sleep(1000);
+                        }
+                    } catch (Exception e) {}
+                }
+            }
+        ).start();
+        
+        
+        Socket socket = new Socket(InetAddress.getLocalHost(), 1234);
+        Scanner s = new Scanner(socket.getInputStream());
+        
+        while(s.hasNextLine()){
+            System.out.println(s.nextLine());
+        }
     }
 }
