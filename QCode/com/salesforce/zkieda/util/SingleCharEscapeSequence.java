@@ -9,6 +9,12 @@ import com.google.common.escape.CharEscaperBuilder;
 import com.google.common.escape.Escaper;
 
 /**
+ * TODO clean up this class and test classes into different files
+ * TODO have better organization for the builders. Remove the 'on' methods, and 
+ * just use an abstract factory for building an Escaper/Descaper.
+ * 
+ * TODO put EscaperDescaperImpl in as a private class
+ * 
  * Used to escape a sequence on a single character. Made to be a bit more versatile than 
  * other string utility options<br/><br/>
  * 
