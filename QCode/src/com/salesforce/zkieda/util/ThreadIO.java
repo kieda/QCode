@@ -2,10 +2,7 @@ package com.salesforce.zkieda.util;
 
 import static com.salesforce.zkieda.util.DevNullStream.NULL_OUTPUT_STREAM;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -243,6 +240,15 @@ public class ThreadIO  {
                         ));
     }
     
+    public static PrintStream getConsoleOut() {
+        return consoleOut;
+    }
+    public static PrintStream getConsoleErr() {
+        return consoleErr;
+    }
+    public static InputStream getConsoleIn() {
+        return consoleIn;
+    }
 }
 
 /**
