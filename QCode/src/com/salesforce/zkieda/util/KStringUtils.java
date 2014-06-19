@@ -1,8 +1,7 @@
 package com.salesforce.zkieda.util;
 
-import org.junit.Assert;
-
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.Chars;
 
 public class KStringUtils {
     public static String join(char separator, char... vals){
@@ -26,13 +25,43 @@ public class KStringUtils {
         
         return new String(result);
     }
-}
-class KStringUtilsTest{
-    public static void main(String[] args) {
-        Assert.assertEquals("",  KStringUtils.join('|'));
-        Assert.assertEquals("a", KStringUtils.join('|', 'a'));
-        Assert.assertEquals("a|b",KStringUtils.join('|', 'a','b'));
-        Assert.assertEquals("a|b|c",KStringUtils.join('|', 'a','b','c'));
-        Assert.assertEquals("a|b|c|d|e|f",KStringUtils.join('|', 'a','b','c','d','e','f'));
+    
+    private static final char[] generateUnique(char start, final int length){
+        char[] result = new char[length];
+        for (int i = 0; i < length; i++) {
+            result[i] = start++;
+        }
+        return result;
+    }
+    public static final boolean GOOG = true;
+    
+    public static void main(String[] args) throws Exception{
+        final int TRIALS = 100;
+        //jvm warm up
+        Thread.sleep(10000);
+        
+        //see how me vs the googs stack up
+        char[] chars10_000 = generateUnique((char)0, 10_000);
+        
+        long total = 0;
+        for (int i = 0; i < TRIALS; i++) {
+            long time = System.nanoTime();
+            
+            if(GOOG){
+                Chars.join("|", chars10_000);
+            }else{
+                join('|', chars10_000);
+            }
+            
+            time = System.nanoTime() - time;
+            total += time;
+            System.out.println("trial "+i+" time "+time);
+        }
+        System.out.println("total : "+total);
+        System.out.println("avg : "+(double)total/(double)TRIALS);
+        
+        //          total,       avg,  trial 0,  trial 1, trial 99
+        //ME   : 17575029, 175750.29,  6399127,   259914,    41925
+        //GOOG : 33495093, 334950.93, 13437859,  2456392,   105824
     }
 }

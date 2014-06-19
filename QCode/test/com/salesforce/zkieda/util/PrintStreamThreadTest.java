@@ -34,8 +34,6 @@ public class PrintStreamThreadTest {
 		};
 	}
 	
-	
-	
 	@Test
 	public void testSystemIOIsReplaced(){
 		assertTrue(System.out instanceof ThreadIO.ThreadPrintStream);
