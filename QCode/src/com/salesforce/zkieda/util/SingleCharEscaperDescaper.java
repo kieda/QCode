@@ -83,6 +83,13 @@ public class SingleCharEscaperDescaper extends SingleCharFunc{
         this.singleCharDescaper = new SingleCharDescaper(escapeChar);
     }
     
+    
+    /**{@inheritDoc}*/
+    @Override
+    public EscaperDescaper apply(String chars) {
+        return (EscaperDescaper) super.apply(chars);
+    }
+    
     /**
      * @param chars our special characters we will escape
      * @return a bijective function that will escape on our escape char, and will escape all 
@@ -92,6 +99,7 @@ public class SingleCharEscaperDescaper extends SingleCharFunc{
     public EscaperDescaper apply(char... chars){
         return new EscaperDescaperImpl(chars);
     }
+    
     
     /**
      * @param c the special character we will escape 

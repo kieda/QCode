@@ -40,8 +40,8 @@ import com.google.common.escape.Escaper;
  */
 public abstract class SingleCharFunc implements Function<char[], Escaper>{
     //a single char - usually the escape char
-    private final char escapeChar;
-    
+    final char escapeChar;
+    private static final char[] EMPTY = new char[0];
     /**
      * @param escapeChar the char we want to use as an escape character 
      */
@@ -58,8 +58,8 @@ public abstract class SingleCharFunc implements Function<char[], Escaper>{
     
     /* utility methods that can be overridden */
     
-    public Escaper apply(){return apply();}
-    public Escaper apply(char c){return apply(c);}
+    public Escaper apply(){return apply(EMPTY);}
+    public Escaper apply(char c){return apply(new char[]{c});}
     public Escaper apply(String chars){
         return apply(Objects.requireNonNull(chars).toCharArray());
     }

@@ -7,20 +7,28 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.escape.Escaper;
+
 /**
- * Test {@link SingleCharEscaperDescaper}
+ * Test {@link SingleCharEscaper}
+ *
  * @author zkieda
  * @since 180
  */
-public class SingleCharEscaperDescaperTest {
-    EscaperDescaper[] testCases; 
-    SingleCharEscaperDescaper scf;
+public class SingleCharEscaperTest {
+    //we import the tests from descaper, since those 
+    //have shown to work
+    
+    Escaper[] testCases; 
+    SingleCharFunc scf;
+    
+
     
     @Before
     public void init(){
-       scf =  new SingleCharEscaperDescaper(escapeChar);
+       scf =  new SingleCharEscaper(escapeChar);
        
-       testCases = new EscaperDescaper[
+       testCases = new Escaper[
            testEscapeChars.length 
          + testEscapeStrings.length
          + testEscapeSingleChars.length
@@ -37,26 +45,23 @@ public class SingleCharEscaperDescaperTest {
        for(String specialChars : testEscapeStrings)
            testCases[i++] = scf.apply(specialChars);
     }
-
-    @Test
-    public void testApply() {
-        for(EscaperDescaper e : testCases){
-            assertNotNull(e);
-            assertNotNull(e.asFunction());
-            assertNotNull(e.asReverseFunction());
-        }
-    }
     
     @Test
-    public void testEscaperDescaper() {
+    public void testApply() {
+        for(Escaper e : testCases){
+            assertNotNull(e);
+            assertNotNull(e.asFunction());
+        }
+    }
+
+    @Test
+    public void testEscaper() {
         int i = 0;
-        for(EscaperDescaper e : testCases){
+        for(Escaper e : testCases){
             for(String[] descaperTest : descaperTests[i]){
                 //[1] : correct result
                 //[0] : to escape
                 assertEquals(descaperTest[1], e.escape(descaperTest[0]));
-                assertEquals(descaperTest[0], e.descape(descaperTest[1]));
-                assertEquals(descaperTest[0], e.descape(e.escape(descaperTest[0])));
             }
             i++;
         }
