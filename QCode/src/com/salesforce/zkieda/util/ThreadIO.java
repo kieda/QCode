@@ -8,6 +8,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.salesforce.zkieda.util.DevNullStream.DevNullInputStream;
 
+//todo -- threadIO is not working properly.
+
+
 /** 
  * This is a modified version of 
  * http://maiaco.com/articles/java/threadOut.php
@@ -126,9 +129,9 @@ public class ThreadIO  {
      * replaces the system in, out, err
      */
     public static void replaceSystemIO() {
-        replaceSystemErr();
-        replaceSystemOut();
-        replaceSystemIn();
+//        replaceSystemErr();
+//        replaceSystemOut();
+//        replaceSystemIn();
     }
     
     /** Changes System.out to a ThreadPrintStream which will
@@ -201,20 +204,20 @@ public class ThreadIO  {
      * @throws IllegalArgumentException if threadOut is not instance of ThreadPrintStream
      */
     public static void dup2(PrintStream threadOut, PrintStream newTarget){
-        //redirect to consoleOut or consoleErr as necessary 
-        if(newTarget == OUT){
-            newTarget = consoleOut;
-        } else if(newTarget == ERR){
-            newTarget = consoleErr;
-        }
-        if(threadOut instanceof ThreadPrintStream){
-            ((ThreadPrintStream)threadOut).setThreadOut(newTarget);
-        } else 
-            throw new IllegalArgumentException(
-                String.format("Expected a ThreadPrintStream, got %s of class %s", 
-                        String.valueOf(threadOut),
-                        threadOut == null ? "null" : threadOut.getClass()
-                    ));
+//        //redirect to consoleOut or consoleErr as necessary 
+//        if(newTarget == OUT){
+//            newTarget = consoleOut;
+//        } else if(newTarget == ERR){
+//            newTarget = consoleErr;
+//        }
+//        if(threadOut instanceof ThreadPrintStream){
+//            ((ThreadPrintStream)threadOut).setThreadOut(newTarget);
+//        } else 
+//            throw new IllegalArgumentException(
+//                String.format("Expected a ThreadPrintStream, got %s of class %s", 
+//                        String.valueOf(threadOut),
+//                        threadOut == null ? "null" : threadOut.getClass()
+//                    ));
     }
     
     /**
@@ -226,18 +229,18 @@ public class ThreadIO  {
      * @throws IllegalArgumentException if threadIn is not instance of ThreadInputStream
      */
     public static void dup2(InputStream threadIn, InputStream newTarget){
-        if(newTarget == IN){
-            newTarget = consoleIn;
-        }
-        
-        if (threadIn instanceof ThreadInputStream) {
-            ((ThreadInputStream)threadIn).setThreadIn(newTarget);
-        } else 
-            throw new IllegalArgumentException(
-                    String.format("Expected a ThreadInputStream, got %s of class %s", 
-                            String.valueOf(threadIn),
-                            threadIn == null ? "null" : threadIn.getClass()
-                        ));
+//        if(newTarget == IN){
+//            newTarget = consoleIn;
+//        }
+//        
+//        if (threadIn instanceof ThreadInputStream) {
+//            ((ThreadInputStream)threadIn).setThreadIn(newTarget);
+//        } else 
+//            throw new IllegalArgumentException(
+//                    String.format("Expected a ThreadInputStream, got %s of class %s", 
+//                            String.valueOf(threadIn),
+//                            threadIn == null ? "null" : threadIn.getClass()
+//                        ));
     }
     
     public static PrintStream getConsoleOut() {

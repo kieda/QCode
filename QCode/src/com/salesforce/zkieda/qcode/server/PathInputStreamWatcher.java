@@ -70,13 +70,11 @@ public class PathInputStreamWatcher extends InputStreamWatcher implements Closea
     public boolean changeOccurred() {
         WatchKey wkey;
         boolean result = false;
-        
         while((wkey = pathWatchService.poll()) != null){
             //poll events
             for(WatchEvent<?> evt : wkey.pollEvents()){
                 WatchEvent.Kind kind = evt.kind();
                 if(kind == StandardWatchEventKinds.ENTRY_MODIFY && filePath.equals((evt.context()))){
-                    System.out.println("change");
                     result = true;
                 }
             }
