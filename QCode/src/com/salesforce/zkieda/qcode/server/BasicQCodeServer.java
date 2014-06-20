@@ -75,7 +75,8 @@ public class BasicQCodeServer extends QCodeServer{
     public BasicQCodeServer(int compilationPort, int outPort, int errPort, String outClassPath, Path p) throws IOException{
         super(
             new BasicEvictionPolicy(32, 1.f),
-            new QCodeSocketServerOut(compilationPort, outPort, errPort),
+//            new QCodeSocketServerOut(compilationPort, outPort, errPort),
+            new BasicServerOut(),
             new PathInputStreamWatcher(p),
             new JavaClassParser(outClassPath)
         );

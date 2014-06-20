@@ -102,7 +102,6 @@ public class QCodeServer {
         @Override
         public void onChange(InputStream is) {
             //way too ghetto do not look
-            
             try{
                 //java class definition
                 String javaClass = Parsers.getClassForCompile(

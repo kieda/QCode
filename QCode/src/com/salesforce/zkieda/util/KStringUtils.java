@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Chars;
 
 public class KStringUtils {
+    
     public static String join(char separator, char... vals){
         int needed = Preconditions.checkNotNull(vals).length - 1;
                                 //if length = 0, -1. 
@@ -33,6 +34,7 @@ public class KStringUtils {
         }
         return result;
     }
+    
     public static final boolean GOOG = true;
     
     public static void main(String[] args) throws Exception{

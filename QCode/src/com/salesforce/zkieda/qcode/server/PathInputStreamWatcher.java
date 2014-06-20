@@ -37,7 +37,7 @@ public class PathInputStreamWatcher extends InputStreamWatcher implements Closea
     private final WatchService pathWatchService;
     
     //key listening for modifications at path
-//    private WatchKey key;
+    private WatchKey key;
     
     //handles spurious requests
     private final DtHandler dtH = new DtHandler();
@@ -57,8 +57,7 @@ public class PathInputStreamWatcher extends InputStreamWatcher implements Closea
             throw new IllegalArgumentException("Expected a file, not a directory");
         pathWatchService = FileSystems.getDefault().newWatchService();
         
-//        key = 
-                path.getParent().register(pathWatchService, StandardWatchEventKinds.ENTRY_MODIFY);
+        key = path.getParent().register(pathWatchService, StandardWatchEventKinds.ENTRY_MODIFY);
         
     }
     
@@ -71,11 +70,13 @@ public class PathInputStreamWatcher extends InputStreamWatcher implements Closea
     public boolean changeOccurred() {
         WatchKey wkey;
         boolean result = false;
+        
         while((wkey = pathWatchService.poll()) != null){
             //poll events
             for(WatchEvent<?> evt : wkey.pollEvents()){
                 WatchEvent.Kind kind = evt.kind();
                 if(kind == StandardWatchEventKinds.ENTRY_MODIFY && filePath.equals((evt.context()))){
+                    System.out.println("change");
                     result = true;
                 }
             }
