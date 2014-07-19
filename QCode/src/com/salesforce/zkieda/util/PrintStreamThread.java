@@ -46,7 +46,6 @@ import java.util.Map.Entry;
  * resulting in an infinite loop. 
  *  
  * @author zkieda
- * @since 180
  * @see ThreadIO
  */
 public class PrintStreamThread extends Thread {
@@ -61,7 +60,7 @@ public class PrintStreamThread extends Thread {
     }
 
     public PrintStreamThread(Runnable target) {
-        super(target);
+        super(target);I_want_to
     }
     public PrintStreamThread(String name) {
         super(name);

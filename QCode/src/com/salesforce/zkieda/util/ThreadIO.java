@@ -1,12 +1,12 @@
 package com.salesforce.zkieda.util;
 
-import static com.salesforce.zkieda.util.DevNullStream.NULL_OUTPUT_STREAM;
+import static org.zkieda.util.io.DevNullStream.NULL_OUTPUT_STREAM;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.salesforce.zkieda.util.DevNullStream.DevNullInputStream;
+import org.zkieda.util.io.DevNullStream.DevNullInputStream;
 
 //todo -- threadIO is not working properly.
 

@@ -23,11 +23,10 @@ import java.util.concurrent.TimeoutException;
  * This class is an output stream used to send information to multiple clients.
  * 
  * @temp
- * @I_want_to
+ * @wanna
  * {concurrent, threaded} one to many output stream 
  * 
  * @author zkieda
- * @since 180
  */
 public class MultiBufferedOutputStream extends OutputStream {
     private final List<OutputStreamInternal> os_internal;

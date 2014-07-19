@@ -4,7 +4,6 @@ package com.salesforce.zkieda.util;
  * Keeps track of the time between events 
  *
  * @author zkieda
- * @since 180
  */
 public class DtHandler {
     //current time 

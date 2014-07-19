@@ -9,7 +9,6 @@ import com.salesforce.zkieda.qcode.server.EvictionPolicy;
  * SelectList should be ordered from the oldest thread to the youngest thread.
  * 
  * @author zkieda
- * @since 190
  * @version 1.0
  */
 public interface SelectList<T> {
