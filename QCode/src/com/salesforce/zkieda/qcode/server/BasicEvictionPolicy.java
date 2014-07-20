@@ -7,14 +7,13 @@ import com.salesforce.zkieda.util.SelectList;
  * removes all threads that have lived too long
  *   
  * @author zkieda
- * @since 190
  * @version 0.9
  */
 public class BasicEvictionPolicy implements EvictionPolicy{
     //max threads allowed. int < 0 for infinite number of threads allowed 
-    private int maxThreads;
+    private final int maxThreads;
     //leeway for the timeout
-    private float leeway;
+    private final float leeway;
     
     
     /**

@@ -56,11 +56,10 @@ public class PrintStreamThread extends Thread {
         = new HashMap<>(4);
     
 
-    public PrintStreamThread() {
-    }
+    public PrintStreamThread() {}
 
     public PrintStreamThread(Runnable target) {
-        super(target);I_want_to
+        super(target);
     }
     public PrintStreamThread(String name) {
         super(name);

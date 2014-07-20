@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
-import com.salesforce.zkieda.qcode.server.BasicQCodeServer;
+import com.salesforce.zkieda.qcode.qcodeserver.BasicQCodeServer;
 /**
  * main function for making qcode THIS IS SHADY  SUPER CONFIDENTIAL TM SALESFORCE DO NOT LOOK
  */
@@ -19,8 +19,7 @@ public class QMain {
 //        System.out.println(
 //                Joiner.on('|').join(new String[]{"", "asdf"})
 //            );
-        
-        File f = new File(QMain.class.getResource("Hello.qc").toURI());
+        File f = new File("src/com/salesforce/zkieda/qcode/drivers/Hello.qc");
         Path p = f.toPath();
 //        
 //        //send output through ports 8376, 8378, 8326

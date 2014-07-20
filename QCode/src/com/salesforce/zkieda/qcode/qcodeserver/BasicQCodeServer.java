@@ -1,9 +1,12 @@
-package com.salesforce.zkieda.qcode.server;
+package com.salesforce.zkieda.qcode.qcodeserver;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 import com.salesforce.zkieda.qcode.lang.JavaClassParser;
+import com.salesforce.zkieda.qcode.server.BasicEvictionPolicy;
+import com.salesforce.zkieda.qcode.server.BasicServerOut;
+import com.salesforce.zkieda.qcode.serverlistener.PathInputStreamWatcher;
 
 /**
  * represents using a basic qcode server with the default settings
@@ -14,7 +17,6 @@ import com.salesforce.zkieda.qcode.lang.JavaClassParser;
  * @version 1.0
  */
 public class BasicQCodeServer extends QCodeServer{
-    
     /** 
      * the folder, package, and main class that we will listen to
      */
@@ -27,7 +29,7 @@ public class BasicQCodeServer extends QCodeServer{
     private static void printro(int compPort, int outPort, int errPort, Path p) {
         System.out.format(
             "QCode Server\n[Listening on file : %s]\n[Compil Port : %d, QOut Port : %d, QErr Port : %d]\n",
-            p, 
+            p,
             compPort,
             outPort,
             errPort

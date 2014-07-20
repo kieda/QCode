@@ -1,8 +1,11 @@
-package com.salesforce.zkieda.qcode.server;
+package com.salesforce.zkieda.qcode.qcodeserver;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
+
+import com.salesforce.zkieda.qcode.server.CompilationServerOut;
+import com.salesforce.zkieda.qcode.server.ServerOutputPort;
 
 /**
  * implementation which outputs qcode information via sockets on the server.
@@ -16,7 +19,7 @@ import java.net.ServerSocket;
  * @since 190
  * @version 0.3
  */
-public class QCodeSocketServerOut implements QCodeServerOut{
+public class QCodeSocketServerOut implements CompilationServerOut{
     private final int compilationOutPort, qCodeOutPort, qCodeErrPort;
     private ServerSocket compilationOutSocket, qCodeOutSocket, qCodeErrSocket;
     private ServerOutputPort compilationOut, qCodeOut, qCodeErr;

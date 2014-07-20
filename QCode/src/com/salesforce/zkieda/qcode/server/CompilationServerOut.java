@@ -8,9 +8,8 @@ import java.io.OutputStream;
  * to use the default, console out/err, return null. 
  * 
  * @author zkieda
- * @since 190
  */
-public interface QCodeServerOut extends ProgramOutput {
+public interface CompilationServerOut extends ProgramOutput {
     
     /**
      * @return the output stream associated with the compilation of qcode and of the 

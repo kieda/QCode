@@ -1,9 +1,17 @@
-package com.salesforce.zkieda.qcode.server;
+package com.salesforce.zkieda.qcode.qcodeserver;
 
 import java.io.*;
 import java.nio.file.Path;
 
 import com.salesforce.zkieda.qcode.lang.Parsers;
+import com.salesforce.zkieda.qcode.server.CompilationJob;
+import com.salesforce.zkieda.qcode.server.EvictionPolicy;
+import com.salesforce.zkieda.qcode.server.JavaOutputPath;
+import com.salesforce.zkieda.qcode.server.CompilationServerOut;
+import com.salesforce.zkieda.qcode.server.RunJob;
+import com.salesforce.zkieda.qcode.server.ThreadEvictionManager;
+import com.salesforce.zkieda.qcode.serverlistener.InputStreamListener;
+import com.salesforce.zkieda.qcode.serverlistener.InputStreamWatcher;
 import com.salesforce.zkieda.util.PrintStreamThread;
 import com.salesforce.zkieda.util.ThreadIO;
 
@@ -34,7 +42,7 @@ public class QCodeServer {
     private ThreadEvictionManager tem;
     
     //how we output our compilation errors, and errors the programs encounter
-    private QCodeServerOut qcso;
+    private CompilationServerOut qcso;
     
     private PrintStream 
         complOut,
@@ -62,7 +70,7 @@ public class QCodeServer {
         EvictionPolicy ep,
         
         //where we pipe our various output to
-        QCodeServerOut qso,
+        CompilationServerOut qso,
         
         InputStreamWatcher qsi,
         

@@ -11,7 +11,7 @@ import com.salesforce.zkieda.util.ThreadIO;
  * @since 180
  * @see ThreadIO
  */
-public class BasicServerOut implements QCodeServerOut{
+public class BasicServerOut implements CompilationServerOut{
     /** use default (typically System.out)*/
     @Override
     public OutputStream getCompilationOut() {
