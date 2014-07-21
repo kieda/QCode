@@ -1,5 +1,4 @@
 ## Background
-Currently, the way that QCode is implemented, we dynamically load and run java classes by creating a new UrlClassloader, using this classloader to load and run a target class. 
 
 Typically in the JVM class definitions are held in a separate location in memory (the permagen pre-java8, and the metaspace as of java8).  A user can't really load a new version of a class easily, since we have a bunch of objects that adhere to its specification. 
 
@@ -7,7 +6,7 @@ For example, suppose we have a class called `Point` with methods `getX()` and `g
 
 The JVM has a bit of a workaround, though, which allows us to do limited dynamic programming. Each class, is loaded by a ClassLoader, and the class 'belongs' to the classloader. We cannot load up a new class definition of `Point` under the same classloader, but we can do it under a **different** classloader - the old instances of `Point` will still remain valid in the context of the old classloader, and all new instances of the new version of `Point` will remain valid under the new classloader. 
 
-This is the way that QCode currently works - whenever we reload a definition of a class we just do it under a new classloader, which allows us to 'simulate' reloading a new class, when it's just under a new context.
+This is the way that QCode currently works - whenever we reload a definition of a class we just do it under a new classloader, which allows us to 'simulate' reloading a new class, when it's just under a new context. We create a new UrlClassloader, then using this classloader to load and run a target class. 
 
 ## Problem
 
