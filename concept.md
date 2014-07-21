@@ -23,4 +23,8 @@ For example, when loading `edu.cmu.ballers.*`, we create two new classloaders in
 
 In the end, we want to achieve dynamic linking of dynamic classes via reflection.
 
-This is the important part - we know how to make a solution, but we don't know an efficient implementation for the job. The solution involves organizing java classes in some sort of efficient in-memory database that's optimized for java names. We must somehow (1) create an efficient lookup system to evict older classloaders, and (2) find a way to quickly and efficiently find and load classes in its scope. 
+This is the important part - we know how to make a solution, but we don't know an efficient implementation for the job. The solution involves organizing java classes in some sort of efficient in-memory database that's optimized for java names. We must somehow (1) create an efficient lookup system to evict older classloaders, and (2) find a way to quickly and efficiently find and load classes in its scope. Not only that, we also need to find out which classloader has which objects, and which classloader we should use. 
+
+In the future, we would also want to have a single classloader load a module of classes (for efficiency). For example, lets say a classloader has loaded classes `A`, `B`, and `C`. Then, we modify `C`. We must know that this classloader is affected, and that we should create a new one consisting of `A`, `B`, and the updated `C`. Then, we need to know how to evict the old classloader, then update the new one in the context of `D`.
+
+Any ideas?
