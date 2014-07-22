@@ -1,7 +1,7 @@
 #-- 
 	import java.io.*;
-	import static com.salesforce.zkieda.util.ThreadIO.*;
-	import com.salesforce.zkieda.util.*;
+	import static org.zkieda.qcode.util.ThreadIO.*;
+	import org.zkieda.qcode.util.*;
 --#
 
 
