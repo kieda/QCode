@@ -69,10 +69,3 @@ Here's what's planned for future versions of QCode :
 A markup system for the QCode output. We will expose a library in QCode which will allow the users to send specific markup tags while the program is running. For example, we could have QCode output be represented as an html file. The listening program would be a web browser, and we can send an html file and dynamically send the output stream and error stream to any connected browser. 
 
 In these future versions, a user just creates a customized 'qcode build' by composing a QCodeServer from a bunch of independent components. 
-
-Bugs
-=====
-
-Eclipse occasionally gives a hotswap code error. This seems to happen after the jvm classloader disposes of a class, but the class no longer exists since we created it virtually. 
-
-From the tests I have run, QCode still works and runs after we receive the error message.
