@@ -37,6 +37,7 @@ This is not ideal for all method invocations - especially since we only need a s
 Before, I discussed that we could load a series of classes into a single classloader. If we do this, the classloader does not need to (1) go through the delegate classloader, and (2) does not need to use reflection. This will allow everything under this classloader to run smoothly as long as the classes under it are mainly interacting with each other. 
 
 Because of this I introduce **a new operation** that is possible (and we should use). 
+
    We may group a series of classes from different classloaders. This operation takes a non-empty susbset of classes from some number of classloaders, removes them, and forms a new classloader with the new set of classes. 
    This operation entails merging two old classloaders into a new one
    This operation entails splitting an old classloader into two new ones, or extracting a subset of classes.
