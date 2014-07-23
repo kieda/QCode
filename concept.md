@@ -14,7 +14,7 @@ Currently QCode works well when reloading one or a few classes at the same time.
 
 Suppose we dynamically loaded class `edu.cmu.ballers.Pfenning`. Then, in a separate instance we dynamically load `edu.cmu.ballers.RJ`. However, `RJ` needs `Pfenning` and attempts to import it. In the current implementation it will fail, since they are loaded under separate classloaders, and so `RJ` will not be able to find `Pfenning`.
 
-## Solution (attempt)
+## The Concept
 
 We will make a 'delegating' classloader  (let's call this `D`) that manages and organizes a series of other classloaders. Internally, `D` has some set of internal classloaders that it manages. When a newer version of a class is loaded, we evict the previous version. As the code is executing, we link the classes through `D`. 
 
@@ -26,6 +26,24 @@ This is the important part - we know how to make a solution, but we don't know a
 
 In the future, we would also want to have a single classloader load a module of classes (for efficiency). For example, lets say that classloader `C`  has loaded classes `P`, `Q`, and `R`. Then, we modify `R`. We must know that `C` is affected, and that we should create a new classloader, `C'`, consisting of `P`, `Q`, and the updated `C'`. Then, we need to evict the old classloader `C` from the delegating classloader `D`. Finally, we need to update `D` such that it knows where to find `P`, `Q`, and `R`.
 
-Ideally, all of these operations will have a good time complexity and will be efficient at a system level (so it can scale well).
+## Data Structure
 
-Ideas?
+As an initial naive approch, I've decided to use a hashmap to link the java class names to the respective class loaders.
+
+Looking at some micro-benchmarking, I've noticed that invoking a method via reflection is roughly 17x slower than regular method invocation. Furthermore, a lookup operation in the (new and improved) java 8 hashmap is about 20x slower than regular method invocation.
+
+This is not ideal for all method invocations - especially since we only need a small portion of the jvm to be dynamically reloadable. 
+
+Before, I discussed that we could load a series of classes into a single classloader. If we do this, the classloader does not need to (1) go through the delegate classloader, and (2) does not need to use reflection. This will allow everything under this classloader to run smoothly as long as the classes under it are mainly interacting with each other. 
+
+Because of this I introduce **a new operation** that is possible (and we should use). 
+   We may group a series of classes from different classloaders. This operation takes a non-empty susbset of classes from some number of classloaders, removes them, and forms a new classloader with the new set of classes. 
+   This operation entails merging two old classloaders into a new one
+   This operation entails splitting an old classloader into two new ones, or extracting a subset of classes.
+   RESTRICTION : classloaders cannot explicitly remove a class - **if we want to extract a single class `c` from classloader `A`, we have to create two new classloaders, `A' = A \setminus c` and `B = {c}`**. Only then will we be able to dispose of the old classloader `A`. **The same is true for reloading classes - if we want to reload one we will have to create a whole new classloader**
+
+In light of this new data structure, and for making the program optimized, we will need to implement a data structure that
+   1. for a series of classes, when there is a lot of class loading and reloading, we dynamically break it down into smaller classloaders. This will allow us to do less work - reloading a classloader consisting of one class is faster than reloading a classloader that has many classes in it!
+   2. classloader that are not being dynamically reloaded - we group into newer, larger classloaders. Optimally, we will group them into MRU modules. (i.e. if classloader `A` is using a lot of resources from classloader `B`, we should merge them into a combined classloader)
+
+If this is acheived, it will have significant implications for dynamic programming in java. Not only will it enable quick dynamic class loading, but it will also be nearly as efficient as the standard JVM
