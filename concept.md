@@ -38,10 +38,10 @@ Before, I discussed that we could load a series of classes into a single classlo
 
 Because of this I introduce **a new operation** that is possible (and we should use). 
 
-   We may group a series of classes from different classloaders. This operation takes a non-empty susbset of classes from some number of classloaders, removes them, and forms a new classloader with the new set of classes. 
-   This operation entails merging two old classloaders into a new one
-   This operation entails splitting an old classloader into two new ones, or extracting a subset of classes.
-   RESTRICTION : classloaders cannot explicitly remove a class - **if we want to extract a single class `c` from classloader `A`, we have to create two new classloaders, `A' = A \setminus c` and `B = {c}`**. Only then will we be able to dispose of the old classloader `A`. **The same is true for reloading classes - if we want to reload one we will have to create a whole new classloader**
+  * We may group a series of classes from different classloaders. This operation takes a non-empty susbset of classes from some number of classloaders, removes them, and forms a new classloader with the new set of classes. 
+  * This operation entails merging two old classloaders into a new one
+  * This operation entails splitting an old classloader into two new ones, or extracting a subset of classes.
+  * RESTRICTION : classloaders cannot explicitly remove a class - **if we want to extract a single class `c` from classloader `A`, we have to create two new classloaders, `A' = A \setminus c` and `B = {c}`**. Only then will we be able to dispose of the old classloader `A`. **The same is true for reloading classes - if we want to reload one we will have to create a whole new classloader**
 
 In light of this new data structure, and for making the program optimized, we will need to implement a data structure that
    1. for a series of classes, when there is a lot of class loading and reloading, we dynamically break it down into smaller classloaders. This will allow us to do less work - reloading a classloader consisting of one class is faster than reloading a classloader that has many classes in it!
