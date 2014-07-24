@@ -1,13 +1,16 @@
 package org.zkieda.qcode.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Scanner;
 
 import org.junit.Test;
-import org.zkieda.qcode.util.PrintStreamThread;
-import org.zkieda.qcode.util.ThreadIO;
 
 import com.google.common.base.Joiner;
 
@@ -16,8 +19,6 @@ public class PrintStreamThreadTest {
 	private static String[] inTest2Lines = {"hello","world!", "sup?"};
 	private static String[] inTest3Lines = {};
 	private static String[] inTest4Lines = {""};
-	
-	
 	
 	//replace the system's IO with one that can have different 
     //io for each thread

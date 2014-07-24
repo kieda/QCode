@@ -63,4 +63,6 @@ If this is acheived, it will have significant implications for dynamic programmi
    * use bcel to make these queries instead of standard object references. Use a proxy to access objects.
    * This design will have persistance in static members - (possibly) not possible with multiple classloaders
    * This design will help with object persistence
+   * Alternative idea
+    * Have delegating classloader + bcel. Extract static vars from classes, put them into delegating classloader. Then persistance of static fields.
   * more info for class loading http://www2.sys-con.com/itsg/virtualcd/java/archives/0808/chaudhri/index.html
