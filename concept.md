@@ -48,3 +48,19 @@ In light of this new data structure, and for making the program optimized, we wi
    2. classloader that are not being dynamically reloaded - we group into newer, larger classloaders. Optimally, we will group them into MRU modules. (i.e. if classloader `A` is using a lot of resources from classloader `B`, we should merge them into a combined classloader)
 
 If this is acheived, it will have significant implications for dynamic programming in java. Not only will it enable quick dynamic class loading, but it will also be nearly as efficient as the standard JVM
+
+## Findings 
+
+  * Look at Apache Tapestry 5 - https://cwiki.apache.org/confluence/display/TAPESTRY/Persistent+Page+Data . It seems to use a form of data persistance specifically for POJOs and requires specific annotations. This is limited however, and we might be able to make a method for more persistant objects
+   * http://tapestryjava.blogspot.com/2006/05/tapestry-5-class-reloading.html 
+  * This method (likely) does not allow persistance of static fields, as they will be disposed with the classloader as well
+  * apache jci - looks like they have a relatively simple approach. They have a single (delegating) classloader which has one internal "Delegate" classloader. This internal classloader is exchanged each time a file they are watching changes. This is non-optimal for larger projects, and does not allow good persistance
+  * Classloader prevention leaks - (common leaks prevented) - https://github.com/mjiderhamn/classloader-leak-prevention/blob/master/src/main/java/se/jiderhamn/classloader/leak/prevention/ClassLoaderLeakPreventor.java
+   * This prevents classloader leaks for some things that will commonly leak them
+  * New design idea - 
+   * have one single classloader
+   * use bcel to take .class and make it into individual components. (possibly) Have a space for static data, space for fields, class heirarchy info, etc.
+   * use bcel to make these queries instead of standard object references. Use a proxy to access objects.
+   * This design will have persistance in static members - (possibly) not possible with multiple classloaders
+   * This design will help with object persistence
+  * more info for class loading http://www2.sys-con.com/itsg/virtualcd/java/archives/0808/chaudhri/index.html
