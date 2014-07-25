@@ -65,4 +65,8 @@ If this is acheived, it will have significant implications for dynamic programmi
    * This design will help with object persistence
   * Alternative idea
    * Have delegating classloader + bcel. Extract static vars from classes, put them into delegating classloader. Then persistance of static fields.
+  * Looked at http://felix.apache.org/site/dive-into-the-ipojo-manipulation-depths.html
+   * Important lesson here - we can use bytecode manipulation to create constructors for persistance. We could use this as an alternative for proxies, but we can run into issues when dealing with non-POJO objects.
+   * We could run this on POJOs, then switch to proxies when class hierarchy has changed
+  * Note - we could build a system that is tied in with OSGi : restart a bundle using dynamic loading or even with class persistance
   * more info for class loading http://www2.sys-con.com/itsg/virtualcd/java/archives/0808/chaudhri/index.html
