@@ -1,7 +1,5 @@
 #--
 	import java.util.regex.*;
-	import java.util.function.*;
-	
 --#
 
 /**

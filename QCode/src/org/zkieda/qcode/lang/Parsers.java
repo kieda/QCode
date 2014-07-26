@@ -1,30 +1,39 @@
 package org.zkieda.qcode.lang;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.zkieda.qcode.server.JavaOutputPath;
 
 public class Parsers {
-    /** shady default methods */
-    private static final String[] DEFAULT_METHODS = {
-        "public static void sout(Object o){System.out.println(o);}",
-        "public static void sout(int o){System.out.println(o);}",
-        "public static void sout(char o){System.out.println(o);}",
-        "public static void sout(char[] o){System.out.println(o);}",
-        "public static void sout(long o){System.out.println(o);}",
-        "public static void sout(short o){System.out.println(o);}",
-        "public static void sout(byte o){System.out.println(o);}",
-        "public static void sout(boolean o){System.out.println(o);}",
-        "public static void sout(){System.out.println();}",
-        "public static final double PI = Math.PI;",
-        "public static final double E = Math.E;",
+    
+    /** 
+     * TODO use xml file for these declarations
+     */
+    private static final String[] STATIC_IMPORTS = {
+        "java.lang.Math",
+        "org.zkieda.qcode.compl.PoolBackBone"
+    };
+    
+    /**
+     * TODO use xml file for these declarations
+     * TODO have a command line interface for adding configs to xml files
+     */
+    private static final String[] PACKAGE_IMPORTS = {
+        "java.util", 
+        "java.math",
+        "java.io",
+        "java.util.function",
+        "java.util.stream"
     };
     
     /**
      * converts an input stream into a string
      * 
      * @param is the input stream
-     * @return the input stream represented as a string
+     * @return the input stream represented as a stringgetCl
      * @throws IOException
      */
     public static String inputStreamToString(InputStream is) throws IOException{
@@ -56,15 +65,26 @@ public class Parsers {
          
              //header
          sb .append(s[3])
-            .append("\nimport java.util.*;"
-                   +"import static java.lang.Math.*;"
-                   +"import java.math.*;"
-                   +"public class ")
-                       .append(classPath.getJavaClass()).append("{");
+            .append("\n");
+         
+             for(String className : STATIC_IMPORTS) {
+                 try {
+                     Class.forName(className, false, ClassLoader.getSystemClassLoader());
+                     sb.append("import static ")
+                         .append(className)
+                         .append(".*;");
+                 } catch(ClassNotFoundException e) {/* class not found */}
+             }
+             for(String packageName : PACKAGE_IMPORTS) {
+                 if(Package.getPackage(packageName) != null) {
+                     sb.append("import ")
+                       .append(packageName)
+                       .append(".*;");
+                 }
+             }
+             sb.append("public class ").append(classPath.getJavaClass()).append("\n{");
         
                         //method declarations 
-                        for(String method : DEFAULT_METHODS)
-                            sb.append(method);
                         sb.append('\n')
                           .append(s[1]);
                         

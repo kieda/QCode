@@ -13,7 +13,6 @@ import java.io.OutputStream;
  * system and allow us to use any scriptable language. 
  * 
  * @author zkieda
- * @since 180
  */
 public interface ProgramOutput {
     /**

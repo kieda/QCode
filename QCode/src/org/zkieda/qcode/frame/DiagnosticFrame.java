@@ -1,7 +1,5 @@
 package org.zkieda.qcode.frame;
-//package com.salesforce.zkieda.qcode.frame;
 //
-//import com.salesforce.zkieda.qcode.drivers.QMain;
 //import java.awt.BorderLayout;
 //import java.awt.Color;
 //import java.awt.Font;

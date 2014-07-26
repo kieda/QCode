@@ -1,6 +1,5 @@
 package org.zkieda.qcode.util;
 
-import org.zkieda.qcode.server.EvictionPolicy;
 
 /**
  * selects a portion of a list. This is used in conjuntion with {@link EvictionPolicy} to 
@@ -30,4 +29,12 @@ public interface SelectList<T> {
     
     /** returns the element at the given index */
     public T get(int idx);
+    
+    /** 
+     * resets the list back to no items being selected
+     * 
+     *  <p/> if this <code>SelectList</code> is backed by some other data structure, 
+     *  we resize. 
+     */
+    public void reset();
 }

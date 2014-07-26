@@ -1,5 +1,4 @@
 package org.zkieda.qcode.frame;
-//package com.salesforce.zkieda.qcode.frame;
 //
 //import java.awt.BorderLayout;
 //import java.awt.Font;
@@ -15,8 +14,6 @@ package org.zkieda.qcode.frame;
 //import javax.swing.JScrollPane;
 //import javax.swing.JTextPane;
 //
-//import com.salesforce.zkieda.qcode.compl.CompileJava;
-//import com.salesforce.zkieda.qcode.drivers.QMain;
 //
 //
 ///**

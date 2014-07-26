@@ -16,7 +16,6 @@ import org.zkieda.qcode.server.ServerOutputPort;
  * anything swing)
  *
  * @author zkieda
- * @since 190
  * @version 0.3
  */
 public class QCodeSocketServerOut implements CompilationServerOut{

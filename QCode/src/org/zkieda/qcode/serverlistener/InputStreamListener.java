@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 /**
  * @author zkieda
- * @since 190
  * @version 1.0
  */
 public interface InputStreamListener {

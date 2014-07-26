@@ -12,7 +12,6 @@ import java.io.InputStream;
  * input stream, and pass the changes along a listener
  *
  * @author zkieda
- * @since 190
  * @version 0.9
  */
 public abstract class InputStreamWatcher implements Runnable{

@@ -1,7 +1,16 @@
 package org.zkieda.qcode.serverlistener;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
 import org.zkieda.qcode.util.DtHandler;
 
@@ -21,7 +30,6 @@ import org.zkieda.qcode.util.DtHandler;
  * object 
  * "sadf"
  * @author zkieda
- * @since 192
  * @version 1.0
  */
 public class PathInputStreamWatcher extends InputStreamWatcher implements Closeable{
@@ -37,7 +45,7 @@ public class PathInputStreamWatcher extends InputStreamWatcher implements Closea
     private final WatchService pathWatchService;
     
     //key listening for modifications at path
-    private WatchKey key;
+    private final WatchKey key;
     
     //handles spurious requests
     private final DtHandler dtH = new DtHandler();

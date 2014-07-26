@@ -1,8 +1,11 @@
 package org.zkieda.qcode.util;
 
-import static org.zkieda.util.io.DevNullStream.NULL_OUTPUT_STREAM;
+import static org.zkieda.util.io.DevNullStream.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -258,7 +261,6 @@ public class ThreadIO  {
  * A test to ensure the correctness of this stuff
  *  
  * @author zkieda
- * @since 180
  */
 class ThreadIOTest {
     public static void main(String[] args)

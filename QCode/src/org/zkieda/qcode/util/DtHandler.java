@@ -9,7 +9,6 @@ public class DtHandler {
     //current time 
     private long lastTime;
     
-    
     /**
      * instantiates a new DtHandler with a default policy (true when 
      * dt >= 200 ms)

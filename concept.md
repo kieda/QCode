@@ -68,5 +68,7 @@ If this is acheived, it will have significant implications for dynamic programmi
   * Looked at http://felix.apache.org/site/dive-into-the-ipojo-manipulation-depths.html
    * Important lesson here - we can use bytecode manipulation to create constructors for persistance. We could use this as an alternative for proxies, but we can run into issues when dealing with non-POJO objects.
    * We could run this on POJOs, then switch to proxies when class hierarchy has changed
+   * More advanced idea - use java annotations to indicate an individual java object or instance (on instantiation.) We can then access this later and dynamically change it
+   * Since we can keep track of objects by classloader grouping, we can use sql-like queries for objects, and update even a group of objects.
   * Note - we could build a system that is tied in with OSGi : restart a bundle using dynamic loading or even with class persistance
   * more info for class loading http://www2.sys-con.com/itsg/virtualcd/java/archives/0808/chaudhri/index.html

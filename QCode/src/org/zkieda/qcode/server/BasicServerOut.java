@@ -8,7 +8,6 @@ import org.zkieda.qcode.util.ThreadIO;
  * Is a basic server out that uses all of the default outputs.  
  * 
  * @author zkieda
- * @since 180
  * @see ThreadIO
  */
 public class BasicServerOut implements CompilationServerOut{

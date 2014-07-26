@@ -1,49 +1,32 @@
 package org.zkieda.qcode.util;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-class GCTester {
-    public static final GCTester INSTANCE = new GCTester();
-    
-    private GCTester() {
-        System.out.println(this + " created");
-    }
-    
-    @Override
-    public void finalize() {
-        System.out.println(this + " finalized");
-    }
-}
 
 public class ClassLoaderTest {
     public static void main(String[] args) throws Exception {
-        System.out.println("in main");
-        testGetObject();
-        System.out.println("Second gc() call (in main)");
-        System.gc();
-        Thread.sleep(2000);
-        System.out.println("End of main");
-    }
-    
-    public static void testGetObject() throws Exception {
-        System.out.println("Creating ClassLoader");
-        ClassLoader cl = new URLClassLoader(new URL[] { new File("./x").toURI()
-                .toURL() });
-        System.out.println("Loading Class");
-        Class<?> clazz = cl.loadClass("org.zkieda.qcode.util.GCTester");
+        URLClassLoader ucl1 = new URLClassLoader(new URL[] {
+                new File("./target/test-classes/").toURI().toURL()
+            });
+        Class<?> sc = Class.forName("org.zkieda.qcode.util.GCTester", false, ucl1);
+        System.out.println(sc.getField("value").getInt(null));
+//        sc.getField("value").setInt(null, 1);ru
+//        System.out.println(sc.getField("value").getInt(null));
         
-        System.out.println("Getting static field");
-        Field field = clazz.getField("INSTANCE");
+        URLClassLoader ucl = new URLClassLoader(new URL[] {
+            new File("./target/test-classes/").toURI().toURL()
+        });
+        Class<?> c = Class.forName("org.zkieda.qcode.util.GCTester", true, ucl);
+        System.out.println(c.getField("value").getInt(null));
         
-        System.out.println("Reading static value");
-        Object object = field.get(null);
-        System.out.println("Got value: " + object);
         
-        System.out.println("First gc() call");
-        System.gc();
-        Thread.sleep(1000);
+        sc.getField("value").setInt(null, 4);
+        System.out.println(c.getField("value").getInt(null));
+        System.out.println(
+                sc.getField("value").getInt(null)
+            );
+        
     }
 }

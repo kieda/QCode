@@ -1,4 +1,4 @@
-package org.zkieda.qcode.server;
+package org.zkieda.qcode.util;
 
 import java.lang.Thread.State;
 
@@ -6,13 +6,11 @@ import java.lang.Thread.State;
  * contains info about a thread
  *
  * @author zkieda
- * @since 190
- * @version 0.9
  */
 public class ThreadInfo {
-    private long startTime;
-    private Thread internal;
-    private long expectedTimeElaped; 
+    private final long startTime;
+    private final Thread internal;
+    private final long expectedTimeElaped; 
     public ThreadInfo(long startTime, long expectedTimeElapsed, Thread thr) {
         this.startTime = startTime;
         this.internal = thr;
@@ -32,9 +30,5 @@ public class ThreadInfo {
     }
     public long getExpectedTimeElapsed() {
         return expectedTimeElaped;
-    }
-    @Override
-    public int hashCode() {
-        return (int)getElapsedTime();
     }
 }

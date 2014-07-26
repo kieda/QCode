@@ -48,7 +48,6 @@ public class MultiBufferedOutputStream extends OutputStream {
      * to the underlying outgoing stream. 
      *
      * @author zkieda
-     * @since 180
      */
     private class OutputStreamInternal extends FilterOutputStream{
         

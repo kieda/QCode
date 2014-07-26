@@ -1,6 +1,5 @@
-package org.zkieda.qcode.server;
+package org.zkieda.qcode.util;
 
-import org.zkieda.qcode.util.SelectList;
 
 /**
  * Basic eviction policy. Has a thread cap which removes the oldest, and 
@@ -9,12 +8,11 @@ import org.zkieda.qcode.util.SelectList;
  * @author zkieda
  * @version 0.9
  */
-public class BasicEvictionPolicy implements EvictionPolicy{
+public class BasicThreadEvictionPolicy implements EvictionPolicy<ThreadInfo>{
     //max threads allowed. int < 0 for infinite number of threads allowed 
     private final int maxThreads;
     //leeway for the timeout
     private final float leeway;
-    
     
     /**
      * @param maxThreads the max threads we should have running. The oldest 
@@ -23,7 +21,7 @@ public class BasicEvictionPolicy implements EvictionPolicy{
      * leeway 2.0f a thread that has expected time of 20 millis will expire 
      * after 40 millis
      */
-    public BasicEvictionPolicy(int maxThreads, float leeway) {
+    public BasicThreadEvictionPolicy(int maxThreads, float leeway) {
         assert leeway > 0;
         this.maxThreads = maxThreads;
         this.leeway = leeway;

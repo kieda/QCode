@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.zkieda.qcode.lang.JavaClassParser;
-import org.zkieda.qcode.server.BasicEvictionPolicy;
 import org.zkieda.qcode.server.BasicServerOut;
 import org.zkieda.qcode.serverlistener.PathInputStreamWatcher;
+import org.zkieda.qcode.util.BasicThreadEvictionPolicy;
 
 /**
  * represents using a basic qcode server with the default settings
  *
  * todo - transfer 
  * @author zkieda
- * @since 190
  * @version 1.0
  */
 public class BasicQCodeServer extends QCodeServer{
@@ -76,7 +75,7 @@ public class BasicQCodeServer extends QCodeServer{
      */
     public BasicQCodeServer(int compilationPort, int outPort, int errPort, String outClassPath, Path p) throws IOException{
         super(
-            new BasicEvictionPolicy(32, 1.f),
+            new BasicThreadEvictionPolicy(32, 1.f),
 //            new QCodeSocketServerOut(compilationPort, outPort, errPort),
             new BasicServerOut(),
             new PathInputStreamWatcher(p),

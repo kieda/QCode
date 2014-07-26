@@ -7,7 +7,6 @@ import java.io.OutputStream;
  * Buffers an output stream to 
  *
  * @author zkieda
- * @since 180
  */
 public class QOutputStream extends OutputStream{
     private final OutputStream other;

@@ -22,7 +22,7 @@ import org.zkieda.qcode.server.JavaOutputPath;
  * 
  */
 public class JavaClassParser implements JavaOutputPath{
-   private String filePath, javaPackage, javaClass;
+   private final String filePath, javaPackage, javaClass;
 
    /** 
     * immediately parses the string
@@ -133,7 +133,6 @@ public class JavaClassParser implements JavaOutputPath{
  * 
  * TODO zak change to a unit test that actually asserts stuff
  * @author zkieda
- * @since 180
  */
 class JavaClassParserTest{
     private static String putSpace(String s){

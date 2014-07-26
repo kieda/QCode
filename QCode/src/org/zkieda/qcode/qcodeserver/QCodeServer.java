@@ -9,14 +9,15 @@ import java.nio.file.Path;
 import org.zkieda.qcode.lang.Parsers;
 import org.zkieda.qcode.server.CompilationJob;
 import org.zkieda.qcode.server.CompilationServerOut;
-import org.zkieda.qcode.server.EvictionPolicy;
 import org.zkieda.qcode.server.JavaOutputPath;
 import org.zkieda.qcode.server.RunJob;
-import org.zkieda.qcode.server.ThreadEvictionManager;
 import org.zkieda.qcode.serverlistener.InputStreamListener;
 import org.zkieda.qcode.serverlistener.InputStreamWatcher;
+import org.zkieda.qcode.util.EvictionPolicy;
 import org.zkieda.qcode.util.PrintStreamThread;
+import org.zkieda.qcode.util.ThreadEvictionManager;
 import org.zkieda.qcode.util.ThreadIO;
+import org.zkieda.qcode.util.ThreadInfo;
 
 /**
  * central component to the qcode server
@@ -35,12 +36,11 @@ import org.zkieda.qcode.util.ThreadIO;
  *          a) run the files (like using .js)
  *
  * @author zkieda
- * @since 190
  * @version 1.0
  */
 public class QCodeServer {
     //policy for removing old threads
-    private final EvictionPolicy ep;
+    private final EvictionPolicy<ThreadInfo> ep;
     //the class that manages removing old threads
     private final ThreadEvictionManager tem;
     
@@ -70,7 +70,7 @@ public class QCodeServer {
     
     public QCodeServer(
         //policy for removing jobs
-        EvictionPolicy ep,
+        EvictionPolicy<ThreadInfo> ep,
         
         //where we pipe our various output to
         CompilationServerOut qso,
