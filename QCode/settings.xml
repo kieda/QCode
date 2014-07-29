@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listener filetype=".+\.java">
+    <set package>
+        org.zkieda.**
+        org.dynamic.**
+    </set> 
+    <!-- how are we supposed to do this??? -->
+</listener>

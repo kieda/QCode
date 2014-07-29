@@ -8,14 +8,18 @@ import java.nio.file.Path;
 import org.zkieda.qcode.qcodeserver.BasicQCodeServer;
 
 /**
+ * ALMOST DONE - 
+ *      1 - eviction policy
+ *      
  * TODOS - 
  *      2 - refactor to make the compilation and output abstract
  *          a - should be able to handle java, scriptenginemanager, etc.
  *          b - ideally, we should have a set of items we are listening on. We define 
  *              what we should do based on the file type and the location of the file.
  *              This is contained in some xml file or json or something.
+ *          c - SettingsLoader.java : InputStream -> Settings 
  *      3 - Make a new class that fits into this - recompiles java, reloads it
- *      4 - find out what's up with printing
+ *      4 - find out what's up with ThreadIO
  *      5 - Make spec for streamed data
  *      6 - implement the spec. Add in extras.
  *      7 - have listener generate a web-page based on the streamed data

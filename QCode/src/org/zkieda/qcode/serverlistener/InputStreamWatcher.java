@@ -19,8 +19,7 @@ public abstract class InputStreamWatcher implements Runnable{
     /**
      * listener waiting for changes in the input stream
      */
-    private InputStreamListener isl;
-    
+    private InputStreamListener inputStreamListener;
 
     /**
      * true if we should reload the input stream
@@ -53,14 +52,14 @@ public abstract class InputStreamWatcher implements Runnable{
      * @param isl the listening input stream
      */
     public void setListener(InputStreamListener isl){
-        this.isl = isl;
+        this.inputStreamListener = isl;
     }
     
     /**
      * @return our listener
      */
     public InputStreamListener getListener(){
-        return isl;
+        return inputStreamListener;
     }
     
     /**
@@ -86,8 +85,8 @@ public abstract class InputStreamWatcher implements Runnable{
      * can be used to manually reload the stream and call the listener
      */
     public void reload() throws IOException{
-        if(isl != null)
-            isl.onChange(reloadStream());
+        if(inputStreamListener != null)
+            inputStreamListener.onChange(reloadStream());
     }
     
     /**

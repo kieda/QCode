@@ -72,3 +72,9 @@ If this is acheived, it will have significant implications for dynamic programmi
    * Since we can keep track of objects by classloader grouping, we can use sql-like queries for objects, and update even a group of objects.
   * Note - we could build a system that is tied in with OSGi : restart a bundle using dynamic loading or even with class persistance
   * more info for class loading http://www2.sys-con.com/itsg/virtualcd/java/archives/0808/chaudhri/index.html
+  * We can use java serialization to reload classes. However, we will need to write our own serializer, and it only works when the class that we serialized has a parent that has a no-arg constructor. Even then, the no-arg constructor will be called, which is problematic if non-pure.
+  * We can use bytecode manipulation to get by most of these problems. Namely, we can reload in all situations except for when we have a non-dynamic class with a non-no arg constructor. 
+   * Alternatively - we can make all top-level classes (classes and interfaces that are directly subclasses of Object) implement serializable on load-time. Since the Object() constructor is pure, we will be able to call serialize without worry. This works for all classes except for the core classes required to load before the main class starts. This solution can also be problematic due to inconsistencies with Serializable.
+   * We could also just dispose of Proxy classes, or wrap them in an OSGi POJO (no way to go back to non-dynamic without disposing of instances)
+  * Idea - look at module-like systems. Having a fully dynamic system can cause inconsistencies on restart. We might be able to have a "provider" module which provides classes for a dependent module to use. When this module is reloaded we grab classes from the provider again. 
+   * Example : provider is .css file. Dependencies : dependent javafx nodes

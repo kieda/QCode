@@ -11,6 +11,9 @@ import org.zkieda.util.Requires;
 /**  
  * manages and starts threads
  * 
+ * TODO make EvictionManager.java which is abstract. 
+ *      takes EvictionPolicy<ThreadInfo> (what else??)
+ *      
  * @author zkieda
  * @version 0.9
  */
@@ -18,12 +21,6 @@ public class ThreadEvictionManager {
     private final List<ThTuple> threads;
     private final EvictionPolicy<ThreadInfo> evictionPolicy;
     private boolean[] selected;
-    
-    /**
-     * the select list for the jobs that are running
-     *
-     * @author zkieda
-     */
     
     private static final long THREAD_JOIN_TIME = 200;
     private static final int MIN_SIZE = 8;
@@ -140,6 +137,7 @@ public class ThreadEvictionManager {
         public int length() {
             return threads.size();
         }
+        
         @Override
         public void selectRange(int idx, int len) {
             Requires.inBounds(idx, len, length());
